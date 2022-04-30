@@ -1,0 +1,28 @@
+nav{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e1f89d;
+
+}
+nav img {
+  width: 120px;
+  height: 120px;
+}
+
+.heading{
+  display: flex;
+  align-items: center;
+}
+
+.heading h1 {
+  margin-right: 1rem;
+}
+.search {
+  font-weight: 500;
+}
