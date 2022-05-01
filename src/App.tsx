@@ -1,10 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
-import List from './components/List';
-import Search from './components/Search';
-import { useState } from 'react';
+import "./App.css";
+import List from "./components/List";
+import Search from "./components/Search";
+import logo from "./assets/logo.png";
+import { useState } from "react";
 
-const title = "React training";
+const title = "React Training";
 
 const listOfItems = [
   {
@@ -43,34 +43,31 @@ const listOfItems = [
     num_comments: 930,
     objectID: 4,
   },
-]
+];
 
 function App() {
-
   const [searchText, setSearchText] = useState("");
 
   function handleChange(event: any) {
     setSearchText(event.target.value);
   }
 
-  const filteredList = listOfItems.filter((item: any) => 
+  const filteredList = listOfItems.filter((item: any) =>
     item.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
     <div>
       <nav>
-        <div className='heading'>
+        <div className="heading">
           <h1>{title}</h1>
-          <img src={logo}/>
+          <img src={logo} />
         </div>
-
-        <Search searchText={searchText} onchange={handleChange}>
+        <Search searchText={searchText} onChange={handleChange}>
           <b>Search</b>
         </Search>
-
       </nav>
-      <List listOfItems={filteredList}/>
+      <List listOfItems={filteredList} />
     </div>
   );
 }
