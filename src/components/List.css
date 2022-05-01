@@ -1,0 +1,46 @@
+table {
+  border-collapse: collapse;
+  margin-top: 6rem;
+  width: 100%;
+}
+
+tr {
+  display: flex;
+}
+
+table a {
+  text-decoration: none;
+  color: white;
+}
+
+th {
+  background-color: rgb(171, 171, 171);
+  color: var(--backgroundColor);
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+th:nth-child(2),
+.itemUrl {
+  flex: 2;
+  flex-flow: row wrap;
+}
+
+tr:nth-child(even) {
+  background-color: rgb(207, 207, 207);
+}
+ tr{
+   color: black;
+   font-weight: 500;
+ }
+ th{
+  color: black;
+}
