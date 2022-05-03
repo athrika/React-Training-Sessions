@@ -1,0 +1,37 @@
+import Item from "./Item";
+import "./List.css";
+import { StoryType } from "../types";
+
+type ListProps = {
+  listOfItems: Array<StoryType>;
+  onClickDelete: (e: number) => void;
+};
+
+const List = ({ listOfItems, onClickDelete }: ListProps) => {
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Author</th>
+            <th>Comments</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listOfItems.map((item) => (
+            <Item
+              key={item.objectID}
+              item={item}
+              onClickDelete={onClickDelete}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default List;
