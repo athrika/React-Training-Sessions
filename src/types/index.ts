@@ -32,8 +32,14 @@ interface IRemoveStory {
   payload: { id: number };
 }
 
+export type PagesType = {
+  pageNumber: number;
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+};
+
 export type ActionType =
   | ISetStories
   | IInitFetch
   | IFetchFailure
   | IRemoveStory;
+

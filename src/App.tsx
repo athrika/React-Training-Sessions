@@ -1,19 +1,25 @@
 import styles from "./App.module.css";
+import './App.css'
 import List from "./components/List";
 import InputWithLabel from "./components/InputWithLabel";
 import logo from "./assets/logo.png";
 import usePersistence from "./hooks/usePersistence";
+import {Box, Pagination, PaginationItem} from '@mui/material';
+import Pages from './components/Pages'
+import "./App.css"
 import React, {
   useEffect,
   useMemo,
   useReducer,
   useCallback,
   createContext,
+  useState,
 } from "react";
 import axios from "axios";
 import { useDebounce } from "./hooks/useDebounce";
 import { StateType, StoryType, ActionType } from "./types";
 import { Link } from "react-router-dom";
+import pages from "./Pages.json"
 
 export const title: string = "React Training";
 
@@ -36,6 +42,7 @@ export function storiesReducer(state: StateType, action: ActionType) {
 }
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+const API= "http://hn.algolia.com/api/v1/search?";
 
 interface AppContextType {
   onClickDelete: (e: number) => void;
@@ -43,15 +50,40 @@ interface AppContextType {
 
 export const AppContext = createContext<AppContextType | null>(null);
 
+
 function App(): JSX.Element {
   const [searchText, setSearchText] = usePersistence("searchTerm", "React");
-  const debouncedUrl = useDebounce(API_ENDPOINT + searchText);
+
+  //const [page, setPage] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const useDebouncedValue = (stateValue: string) => {
+    const [value, setValue] = useState(stateValue);
+  
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setValue(stateValue);
+      }, 500);
+  
+      return () => clearTimeout(timer);
+    }, [stateValue]);
+  
+    return value;
+  };
+
+
+  let debouncedUrl = useDebounce(API_ENDPOINT + searchText);
+
+  const pageUrl = useDebouncedValue(
+    API + "query=" + searchText + "&page=" + (pageNumber - 1)
+  );
 
   const [stories, dispatchStories] = useReducer(storiesReducer, {
     data: [],
     isError: false,
     isLoading: false,
   });
+
 
   const sumOfComments = useMemo(
     () =>
@@ -79,6 +111,23 @@ function App(): JSX.Element {
     handleFetchStories();
   }, [handleFetchStories]);
 
+  const handlePage = useCallback(async () => {
+    dispatchStories({ type: "INIT_FETCH" });
+    try {
+      const response = await axios.get(pageUrl);
+      dispatchStories({
+        type: "SET_STORIES",
+        payload: { data: response.data.hits },
+      });
+    } catch {
+      dispatchStories({ type: "FETCH_FAILURE" });
+    }
+  }, [pageUrl]);
+
+  useEffect(() => {
+    handlePage();
+  }, [handlePage]);
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchText(event.target.value);
   }
@@ -97,7 +146,7 @@ function App(): JSX.Element {
   }
 
   return (
-    <div>
+    <div >
       <nav>
         <div className={styles.heading}>
           <h1>{title}</h1>
@@ -111,19 +160,24 @@ function App(): JSX.Element {
         >
           Search
         </InputWithLabel>
-        <Link to="/login" state={{ id: "1234" }}>
-          <h6>Login</h6>
-        </Link>
+       
       </nav>
       {stories.isLoading ? (
         <h1 style={{ marginTop: "10rem" }}>Loading</h1>
       ) : (
-        <AppContext.Provider value={{ onClickDelete: handleDeleteClick }}>
-          <List listOfItems={stories.data} />
-        </AppContext.Provider>
+          <div className="variantOneData">
+            <AppContext.Provider value={{ onClickDelete: handleDeleteClick }}>
+              <List listOfItems={stories.data} />
+            </AppContext.Provider>
+            <Pages pageNumber={pageNumber} setPageNumber={setPageNumber}  />
+          </div>
+                  
       )}
+          
+
     </div>
   );
 }
 
 export default App;
+

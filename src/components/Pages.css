@@ -1,0 +1,9 @@
+.pages{
+    margin-top: 660px;
+    height: 30px;
+    left:200px;
+    right:200px;
+    justify-content: center;
+    background-color: #192231;
+    color: black;
+}
